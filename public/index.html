@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnRight - Excellence in Education</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: white;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #2d3748;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-icon {
+            font-size: 1.6rem;
+            color: #63B3ED;
+        }
+
+        .nav-center {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-center a {
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .nav-center a:hover {
+            color: #63B3ED;
+        }
+
+        .nav-center a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #FF6B35, #FF8E53);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-center a:hover::after {
+            width: 100%;
+        }
+
+        .login-btn {
+            background: white;
+            color: #63B3ED;
+            padding: 12px 24px;
+            border: 1.5px solid #63B3ED;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .login-btn:hover {
+            background: #63B3ED;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 179, 237, 0.3);
+        }
+
+        /* Menu Toggle - Hamburger with Location Indicator */
+        .menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #4a5568;
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .menu-toggle:hover {
+            background: #f7fafc;
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            left: -320px;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.08);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 200;
+            padding: 0;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .side-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        }
+
+        .close-menu {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            color: #4a5568;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .close-menu:hover {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .side-menu-links {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 0;
+        }
+
+        .side-menu-links a {
+            color: #4a5568;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+        }
+
+        .side-menu-links a:hover {
+            background: #f7fafc;
+            color: #2d3748;
+            border-left-color: #FF6B35;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: white;
+            color: #333;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: slideDown 1s ease;
+            color: #333;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #666;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #63B3ED;
+            padding: 15px 30px;
+            border: 1.5px solid #63B3ED;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #63B3ED;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 179, 237, 0.3);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+            font-weight: 600;
+            position: relative;
+            padding: 0 2rem;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF6B35, #FF8E53, #FFB366);
+            border-radius: 2px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #FF8E53, #FFB366);
+            border-radius: 1px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.3s, transform 0.2s;
+        }
+
+        .feature-card:hover {
+            border-color: #00D9FF;
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #00D9FF;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Subjects Section */
+        .subjects {
+            padding: 4rem 0;
+            background: #fafafa;
+        }
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .subject-card {
+            background: white;
+            color: #333;
+            padding: 2rem;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s, transform 0.2s;
+        }
+
+        .subject-card:hover {
+            border-color: #00D9FF;
+            transform: translateY(-3px);
+        }
+
+        .subject-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .subject-card p {
+            color: #666;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: white;
+            color: #333;
+            padding: 3rem 0;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: #00D9FF;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #fafafa;
+            color: #333;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            background: #f5f5f5;
+            color: #333;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #00D9FF;
+        }
+
+        .footer-section a {
+            color: #666;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: #00D9FF;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-center {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid,
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .login-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Coming Soon Badge */
+        .coming-soon {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .beta-badge {
+            background: #00D9FF;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo" style="display: flex; align-items: center; gap: 1rem;">
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+                <span class="logo-icon">⚡</span>
+                <span>Learn Right</span>
+            </div>
+            <ul class="nav-center">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#subjects">Subjects</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="#login" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Side Menu -->
+    <div class="menu-overlay" onclick="closeMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span>Learn Right</span>
+            </div>
+            <button class="close-menu" onclick="closeMenu()">×</button>
+        </div>
+        <div class="side-menu-links">
+            <a href="#home" onclick="closeMenu()">🏠 Home</a>
+            <a href="#subjects" onclick="closeMenu()">📚 All Subjects</a>
+            <a href="#about" onclick="closeMenu()">ℹ️ About Us</a>
+            <a href="#contact" onclick="closeMenu()">📞 Contact</a>
+            <a href="#login" onclick="closeMenu()">🔑 Login / Sign Up</a>
+        </div>
+    </div>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Excel in Your Studies</h1>
+            <p>Access world-class educational content aligned with Ethiopian curriculum. Study anytime, anywhere, and watch your grades soar to new heights.</p>
+            <a href="#subjects" class="cta-button">Start Learning Now</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose LearnRight?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Curriculum Aligned</h3>
+                    <p>All content carefully mapped to Ethiopian national curriculum ensuring perfect alignment with your school studies.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>World-Class Content</h3>
+                    <p>Best educational materials from around the globe, including Khan Academy and other premium resources.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>24/7 Access</h3>
+                    <p>Study at your own pace, anytime, anywhere. Perfect for busy students who want to excel.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Optimized for smartphones and tablets. Learn even with limited internet connectivity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Track Progress</h3>
+                    <p>Monitor your learning journey with detailed progress tracking and performance analytics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Proven Results</h3>
+                    <p>Students using our platform show significant improvement in test scores and understanding.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="subjects" id="subjects">
+        <div class="container">
+            <h2 class="section-title">Available Subjects</h2>
+            <div class="subjects-grid">
+                <div class="subject-card">
+                    <h3>Mathematics</h3>
+                    <p>Algebra, Geometry, Calculus & more</p>
+                    <span class="beta-badge">Available</span>
+                </div>
+                <div class="subject-card">
+                    <h3>Physics</h3>
+                    <p>Mechanics, Electricity, Waves</p>
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+                <div class="subject-card">
+                    <h3>Chemistry</h3>
+                    <p>Organic, Inorganic, Physical</p>
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+                <div class="subject-card">
+                    <h3>Biology</h3>
+                    <p>Cell Biology, Genetics, Evolution</p>
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+                <div class="subject-card">
+                    <h3>English</h3>
+                    <p>Grammar, Literature, Writing</p>
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+                <div class="subject-card">
+                    <h3>History</h3>
+                    <p>Ethiopian & World History</p>
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Lessons Available</p>
+                </div>
+                <div class="stat-item">
+                    <h3>95%</h3>
+                    <p>Student Improvement Rate</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Platform Availability</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Free</h3>
+                    <p>Always Accessible</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Transform Your Education?</h2>
+            <p>Join thousands of Ethiopian students who are already improving their grades with LearnRight. Start your journey to academic excellence today!</p>
+            <a href="#subjects" class="cta-button">Get Started Free</a>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#home">Home</a>
+                    <a href="#subjects">All Subjects</a>
+                    <a href="#about">About Us</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Subjects</h3>
+                    <a href="#">Mathematics</a>
+                    <a href="#">Physics</a>
+                    <a href="#">Chemistry</a>
+                    <a href="#">Biology</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <a href="#">Facebook</a>
+                    <a href="#">Telegram</a>
+                    <a href="#">WhatsApp</a>
+                    <a href="#">Email Us</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <a href="#">Help Center</a>
+                    <a href="#">Study Tips</a>
+                    <a href="#">Technical Support</a>
+                    <a href="#">Feedback</a>
+                </div>
+            </div>
+            <div style="border-top: 1px solid #34495e; padding-top: 2rem; margin-top: 2rem;">
+                <p>&copy; 2024 Learn Right. Empowering Ethiopian Students for Academic Excellence.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menu functionality
+        function toggleMenu() {
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.querySelector('.menu-overlay');
+            
+            sideMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeMenu() {
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.querySelector('.menu-overlay');
+            
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add some interactivity to subject cards
+        document.querySelectorAll('.subject-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const subject = this.querySelector('h3').textContent;
+                const isAvailable = this.querySelector('.beta-badge');
+                
+                if (isAvailable) {
+                    alert(`${subject} lessons are now available! Start learning today.`);
+                } else {
+                    alert(`${subject} lessons are coming soon! Follow us on social media for updates.`);
+                }
+            });
+        });
+
+        // Simple animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.feature-card, .subject-card');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = "1";
+                    element.style.transform = "translateY(0)";
+                }
+            });
+        }
+
+        // Initially hide elements for animation
+        document.querySelectorAll('.feature-card, .subject-card').forEach(element => {
+            element.style.opacity = "0";
+            element.style.transform = "translateY(30px)";
+            element.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+        animateOnScroll(); // Run once on load
+    </script>
+</body>
+</html>

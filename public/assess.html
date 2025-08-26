@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Right - Your Personalized Learning Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: white;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #2d3748;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-icon {
+            font-size: 1.6rem;
+            color: #63B3ED;
+        }
+
+        .nav-center {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-center a {
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .nav-center a:hover {
+            color: #63B3ED;
+        }
+
+        .nav-center a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(90deg, #FF6B35, #FF8E53);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-center a:hover::after {
+            width: 100%;
+        }
+
+        .login-btn {
+            background: white;
+            color: #63B3ED;
+            padding: 12px 24px;
+            border: 1.5px solid #63B3ED;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .login-btn:hover {
+            background: #63B3ED;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 179, 237, 0.3);
+        }
+
+        /* Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #4a5568;
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .menu-toggle:hover {
+            background: #f7fafc;
+        }
+
+        .menu-toggle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -12px;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #FF6B35, #FF8E53);
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            left: -320px;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.08);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 200;
+            padding: 0;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .side-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        }
+
+        .close-menu {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            color: #4a5568;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .close-menu:hover {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .side-menu-links {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 0;
+        }
+
+        .side-menu-links a {
+            color: #4a5568;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+        }
+
+        .side-menu-links a:hover {
+            background: #f7fafc;
+            color: #2d3748;
+            border-left-color: #FF6B35;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            color: #2d3748;
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #4a5568;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B35, #FF8E53);
+            color: white;
+            padding: 18px 36px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Assessment Section */
+        .assessment-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+            font-weight: 700;
+            position: relative;
+            padding: 0 2rem;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF6B35, #FF8E53, #FFB366);
+            border-radius: 2px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #FF8E53, #FFB366);
+            border-radius: 1px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Assessment Tool */
+        .assessment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .assessment-progress {
+            height: 6px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B35, #FF8E53);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .assessment-content {
+            padding: 3rem;
+        }
+
+        .question-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question-section.active {
+            display: block;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-description {
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        .question {
+            margin-bottom: 2.5rem;
+        }
+
+        .question-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: #63B3ED;
+            background: #f7fafc;
+        }
+
+        .option.selected {
+            border-color: #FF6B35;
+            background: linear-gradient(135deg, #fff5f0, #fef5e7);
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option-text {
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #63B3ED, #4299E1);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 179, 237, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #FF6B35, #FF8E53);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .step-indicator {
+            text-align: center;
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .results-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .results-subtitle {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 2rem;
+        }
+
+        .learning-path {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .path-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .path-steps {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .path-steps li {
+            padding: 0.8rem 0;
+            border-left: 3px solid #FF6B35;
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: #f7fafc;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6B35, #FF8E53);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #63B3ED;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #63B3ED;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-center {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+                padding: 0 1rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .assessment-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .options {
+                gap: 0.8rem;
+            }
+
+            .option {
+                padding: 1rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo" style="display: flex; align-items: center; gap: 1rem;">
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+                <span class="logo-icon">⚡</span>
+                <span>Learn Right</span>
+            </div>
+            <ul class="nav-center">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#assessment">Assessment</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="#login" class="login-btn">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Side Menu -->
+    <div class="menu-overlay" onclick="closeMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span>Learn Right</span>
+            </div>
+            <button class="close-menu" onclick="closeMenu()">×</button>
+        </div>
+        <div class="side-menu-links">
+            <a href="#home" onclick="closeMenu()">🏠 Home</a>
+            <a href="#assessment" onclick="closeMenu()">🎯 Take Assessment</a>
+            <a href="#features" onclick="closeMenu()">✨ Features</a>
+            <a href="#contact" onclick="closeMenu()">📞 Contact</a>
+            <a href="#login" onclick="closeMenu()">🔑 Login / Sign Up</a>
+        </div>
+    </div>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Your Personalized Learning Journey Starts Here</h1>
+            <p>Don't get lost in endless content. Take our AI-powered assessment to discover exactly what you need to learn, based on where you are, who you are, and where you want to go.</p>
+            <a href="#assessment" class="cta-button">Discover Your Learning Path</a>
+        </div>
+    </section>
+
+    <section class="assessment-section" id="assessment">
+        <div class="container">
+            <h2 class="section-title">Personalized Learning Assessment</h2>
+            <p class="section-subtitle">Answer questions about your current skills, natural abilities, and career interests to get a customized learning path that's perfect for you.</p>
+            
+            <div class="assessment-container">
+                <div class="assessment-progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                
+                <div class="assessment-content">
+                    <!-- Current Skills Section -->
+                    <div class="question-section active" id="section1">
+                        <div class="section-header">
+                            <div class="section-icon">📊</div>
+                            <h3 class="section-name">Where You Are</h3>
+                            <p class="section-description">Let's assess your current academic skills and knowledge level</p>
+                        </div>
+                        
+                        <div class="step-indicator">Question 1 of 9</div>
+                        
+                        <div class="question">
+                            <h4 class="question-title">How would you rate your current mathematics skills?</h4>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="math_level" value="beginner">
+                                    <span class="option-text">Beginner - I struggle with basic arithmetic and need to review fundamentals</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="math_level" value="intermediate">
+                                    <span class="option-text">Intermediate - I'm comfortable with algebra and basic geometry</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="math_level" value="advanced">
+                                    <span class="option-text">Advanced - I handle calculus, trigonometry, and complex problem-solving well</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="math_level" value="expert">
+                                    <span class="option-text">Expert - I excel in advanced mathematics and help others understand it</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <div></div>
+                            <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-section" id="section2">
+                        <div class="section-header">
+                            <div class="section-icon">📊</div>
+                            <h3 class="section-name">Where You Are</h3>
+                            <p class="section-description">Understanding your science background</p>
+                        </div>
+                        
+                        <div class="step-indicator">Question 2 of 9</div>
+                        
+                        <div class="question">
+                            <h4 class="question-title">How comfortable are you with science subjects (Physics, Chemistry, Biology)?</h4>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="science_level" value="beginner">
+                                    <span class="option-text">Beginner - Science is challenging for me, I need to start with basics</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="science_level" value="intermediate">
+                                    <span class="option-text">Intermediate - I understand basic concepts but need more practice</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="science_level" value="advanced">
+                                    <span class="option-text">Advanced - I'm strong in most science topics and enjoy experiments</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="science_level" value="expert">
+                                    <span class="option-text">Expert - Science is my strength, I often explore topics beyond class</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-section" id="section3">
+                        <div class="section-header">
+                            <div class="section-icon">📊</div>
+                            <h3 class="section-name">Where You Are</h3>
+                            <p class="section-description">Evaluating your language and communication skills</p>
+                        </div>
+                        
+                        <div class="step-indicator">Question 3 of 9</div>
+                        
+                        <div class="question">
+                            <h4 class="question-title">How would you describe your English and communication abilities?</h4>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="language_level" value="beginner">
+                                    <span class="option-text">Beginner - I struggle with reading comprehension and writing</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="language_level" value="intermediate">
+                                    <span class="option-text">Intermediate - I can communicate well but want to improve my writing</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="language_level" value="advanced">
+                                    <span class="option-text">Advanced - I'm articulate in both speaking and writing</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="language_level" value="expert">
+                                    <span class="option-text">Expert - I excel in languages and love literature and debate</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Natural Abilities Section -->
+                    <div class="question-section" id="section4">
+                        <div class="section-header">
+                            <div class="section-icon">🧠</div>
+                            <h3 class="section-name">Who You Are</h3>
+                            <p class="section-description">Understanding your natural learning style and abilities</p>
+                        </div>
+                        
+                        <div class="step-indicator">Question 4 of 9</div>
+                        
+                        <div class="question">
+                            <h4 class="question-title">How do you learn best?</h4>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="learning_style" value="visual">
+                                    <span class="option-text">Visual - I understand better with diagrams, charts, and visual demonstrations</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="learning_style" value="auditory">
+                                    <span class="option-text">Auditory - I learn best through listening, discussions, and explanations</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="learning_style" value="kinesthetic">
+                                    <span class="option-text">Kinesthetic - I need hands-on activities and movement to understand concepts</span>
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="learning_style" value="logical">
+                                    <span class="option-text">Logical - I prefer step-by-step reasoning and systematic approaches</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-section" id="section5">
+                        <div class="section-header">
+                            <div class="section-icon">🧠</div>
+                            <h3 class="section-name">Who You Are</h3>
+                            <p class="section-description">Identifying your natural strengths</p>
+                        </div>
+                        
+                        <div class="step-indicator">Question 5 of 9</div>
+                        
+                        <div class="question">
+                            <h4 class="question-title">Which activities come most naturally to you?</h4>
+                            <div class="options">
+                                <label class="option">
+                                    <input type="radio" name="natural_strength" value="analytical">
+                                    <span class="option-text">Solving puzzles and logical problems - I enjoy breaking down complex issues</span>
+                                </label>
+                                <label class="option">
